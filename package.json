@@ -1,0 +1,18 @@
+{
+  "name": "53025_lastblockms",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ms.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ms.js",
+    "dev": "node --watch ms.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "ws": "^8.12.1"
+  }
+}
