@@ -12,8 +12,14 @@ app.use(express.json())
 // current config
 console.log({config})
 
+// local IP
+const LOCAL = 'ws://localhost:53024'
+
+console.log('Local IP:', LOCAL)
+
 // Create a WebSocket client
-const ws = new WebSocket(`ws://${config.VM}.${WS_IP}:${WS_PORT}}`);
+// const ws = new WebSocket(`ws://${config.VM}.${WS_IP}:${WS_PORT}}`);
+const ws = new WebSocket(LOCAL);
 
 app.get('/', (_, res) => {
   // res.send('Hello World!')
