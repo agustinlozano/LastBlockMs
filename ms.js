@@ -2,7 +2,7 @@ const express = require('express')
 const WebSocket = require('ws')
 
 const config = require('./config/main.json')
-const { WS_IP, WS_PORT } = config
+const { WS_IP } = config
  
 const app = express()
 
@@ -12,21 +12,20 @@ app.use(express.json())
 // current config
 console.log({config})
 
-// local IP
-const LOCAL = 'ws://localhost:53024'
-
-console.log('Local IP:', LOCAL)
+// local config
+// const LOCAL = 'ws://localhost:53024'
+// console.log('Local IP:', LOCAL)
+// const ws = new WebSocket(LOCAL);
 
 // Create a WebSocket client
-// const ws = new WebSocket(`ws://${config.VM}.${WS_IP}:${WS_PORT}}`);
-const ws = new WebSocket(LOCAL);
+const WS_URL = `ws://${config.VM}.${WS_IP}`
+const ws = new WebSocket(WS_URL);
+console.log('WS_URL:', WS_URL)
 
 app.get('/', (_, res) => {
-  // res.send('Hello World!')
-  // send a hello world with HTML
   res.send(`
     <h1>Last Block Microservice</h1>
-    <p>Send a POST request to /lastblock with a JSON payload</p>
+    <p>Send a POST request to /lastblock with a proper JSON payload</p>
   `)
 })
 
@@ -45,5 +44,5 @@ app.post('/lastblock', (req, res) => {
 })
 
 app.listen(config.PORT, () => {
-  console.log(`\nServer started on port ${config.PORT}]\n`)
+  console.log(`\nServer started on port: ${config.PORT}\n`)
 })
