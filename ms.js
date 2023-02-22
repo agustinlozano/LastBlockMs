@@ -34,13 +34,28 @@ app.post('/lastblock', (req, res) => {
   const payload = req.body
   const { projectid, code } = payload
 
+  // validate payload
+  if (!projectid || !code) {
+    const response = {
+      status: 'ERROR',
+      description: 'Invalid payload',
+      message: 'Payload must contain projectid and code'
+    }
+    return res.send(response)
+  }
+
   console.log(`LB> ID: "${projectid}", Code: "${code}"`)
 
   // send block data as a websocket client to the websocket server
   ws.send(JSON.stringify({ projectid, code }))
 
-  // send a response to the client
-  res.send('OK, you are great!')
+  // send a response after POST request
+  const response = {
+    status: 'OK',
+    description: 'Successful',
+    message: 'Block was sent to the websocket server'
+  }
+  res.send(response)
 })
 
 app.listen(config.PORT, () => {
