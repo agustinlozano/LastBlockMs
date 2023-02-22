@@ -1,8 +1,6 @@
 const express = require('express')
-const WebSocket = require('ws')
-
+const { connectWsClient } = require('./conection')
 const config = require('./config/main.json')
-const { WS_IP } = config
  
 const app = express()
 
@@ -12,16 +10,6 @@ app.use(express.json())
 // current config
 console.log({config})
 
-// local config
-// const LOCAL = 'ws://localhost:53024'
-// console.log('Local IP:', LOCAL)
-// const ws = new WebSocket(LOCAL);
-
-// Create a WebSocket client
-const WS_URL = `ws://${config.VM}.${WS_IP}`
-const ws = new WebSocket(WS_URL);
-console.log('WS_URL:', WS_URL)
-
 app.get('/', (_, res) => {
   res.send(`
     <h1>Last Block Microservice</h1>
@@ -30,6 +18,8 @@ app.get('/', (_, res) => {
 })
 
 app.post('/lastblock', (req, res) => {
+  const ws = connectWsClient(config)
+  
   // access to the json payload sent by the client in the request
   const payload = req.body
   const { projectid, code } = payload
@@ -44,10 +34,13 @@ app.post('/lastblock', (req, res) => {
     return res.send(response)
   }
 
-  console.log(`LB> ID: "${projectid}", Code: "${code}"`)
+  console.log('LB> paylod', { projectid, code })
 
-  // send block data as a websocket client to the websocket server
-  ws.send(JSON.stringify({ projectid, code }))
+  // when ws client is connected send the payload
+  ws.on('open', () => {
+    // send block data as a websocket client to the websocket server
+    ws.send(JSON.stringify({ projectid, code }))
+  })
 
   // send a response after POST request
   const response = {
